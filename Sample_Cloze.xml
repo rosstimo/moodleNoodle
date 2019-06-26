@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+<!-- question: 1  -->
+<question type="cloze">
+<name><text>Book Test #1</text>
+</name>
+<questiontext>
+<text><![CDATA[..............]]></text>
+</questiontext>
+<generalfeedback>
+<text></text>
+</generalfeedback>
+<shuffleanswers>0</shuffleanswers>
+</question>
+
+<!-- question: 2 -->
+<question type="cloze">
+<name><text>Book Test #2</text>
+</name>
+<questiontext>
+<text><![CDATA[............]]></text>
+</questiontext>
+<generalfeedback>
+<text></text>
+</generalfeedback>
+<shuffleanswers>0</shuffleanswers>
+</question>
+
+</quiz>

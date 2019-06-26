@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+<!-- question: 0  -->
+  <question type="category">
+    <category>
+        <text>$course$/top</text>
+
+    </category>
+  </question>
+
+<!-- question: 0  -->
+  <question type="category">
+    <category>
+        <text>$course$/top/__Sample Questions</text>
+
+    </category>
+  </question>
+
+<!-- question: 7926931  -->
+  <question type="multichoice">
+    <name>
+      <text>Sample Multiple Choice Question</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Question text<br></p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>General feedback<br></p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <correctfeedback format="html">
+      <text>Your answer is correct.</text>
+    </correctfeedback>
+    <partiallycorrectfeedback format="html">
+      <text>Your answer is partially correct.</text>
+    </partiallycorrectfeedback>
+    <incorrectfeedback format="html">
+      <text>Your answer is incorrect.</text>
+    </incorrectfeedback>
+    <shownumcorrect/>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Choice 1<br></p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Feedback<br></p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="-100" format="html">
+      <text><![CDATA[<p>Choice 2<br><br><br></p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Feedback<br></p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="-100" format="html">
+      <text><![CDATA[<p>Choice 3<br></p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Feedback<br></p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="-100" format="html">
+      <text><![CDATA[<p>Choice 4<br></p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Feedback<br></p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="-100" format="html">
+      <text><![CDATA[<p>Choice 5<br></p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Feedback<br></p>]]></text>
+      </feedback>
+    </answer>
+    <hint format="html">
+      <text><![CDATA[<p>Hint 1<br></p>]]></text>
+    </hint>
+    <hint format="html">
+      <text><![CDATA[<p>Hint 2<br></p>]]></text>
+    </hint>
+    <tags>
+      <tag><text>Tags here</text>
+</tag>
+    </tags>
+  </question>
+
+<!-- question: 7926932  -->
+  <question type="truefalse">
+    <name>
+      <text>Sample True False</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Question text<br></p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text><![CDATA[<p>General feedback<br></p>]]></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>1.0000000</penalty>
+    <hidden>0</hidden>
+    <answer fraction="0" format="moodle_auto_format">
+      <text>true</text>
+      <feedback format="html">
+        <text><![CDATA[<p>Feedback for the response 'True'.<br></p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="100" format="moodle_auto_format">
+      <text>false</text>
+      <feedback format="html">
+        <text><![CDATA[<p>Feedback for the response 'False'.<br></p>]]></text>
+      </feedback>
+    </answer>
+    <tags>
+      <tag><text>Tags here</text>
+</tag>
+    </tags>
+  </question>
+
+</quiz>
