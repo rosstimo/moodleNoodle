@@ -1,5 +1,5 @@
 import re
-class ClozeQ():
+class ClozeQ:
     '''Cloze Embeded Question Generator
 
         more info here: https://docs.moodle.org/37/en/Embedded_Answers_(Cloze)_question_type
@@ -77,113 +77,151 @@ class ClozeQ():
     Idaho State University
     Robotics'''
 
-
-
-    def __init__(self, questionPoints, questionType, responses=None):
+    def __init__(self, questionPoints, questionType, questionResponses=None):
+        '''Single Moodle Cloze Question.
+        Properties Cloze formatted string, Question Points, Question Type,
+        list of responses. If the question type is NUMERICAL or NM the answer
+        field may contain the accepted error value seperated from the answer
+        with a ':' in this format <answer:acceptedError> '''
+        #self.clozeStr = makeClozeStr(questionPoints, questionType, responses)
         self.questionPoints = questionPoints
         self.questionType = questionType
-        if responses is None:
-            self.responses = []
-        else:
-            self.responses = responses
+        self.questionResponses = questionResponses
 
-    @property
-    def clozeStr(self):
-        responsStr=''
-        for item in reponsees:
-            responsStr += responseStr('%' + item[0] + '%' + item[1] + '#' + item[2])
-        return '{{}:{}:{}}'.format(self.questionPoints, self.questionType, responsStr)
 
-def getQuestions(clozeStr):
-    '''returns list of all cloze formattes questions in a string'''
-    pattern = re.compile(r'{.+}')
-    matches = pattern.findall(clozeStr)
-    return matches
+    @classmethod
+    def from_clozeStr(cls, clozeStr):
+        #cls.clozeStr = clozeStr
+        x = cls.getQPoints(cls, clozeStr)
+        y = cls.getQType(cls, clozeStr)
+        z = cls.getQResponses(cls, clozeStr)
+        return cls(x, y, z)
 
-def getQPoints(clozeStr):
-    '''Returns defailt poinst for the question. '' will defualt to 1 point.'''
-    pattern = re.compile(r'{\d*')
-    matches = pattern.findall(clozeStr)
-    return matches[0].replace('{','')#TODO: see if there is a cleanear way to return what is between the digits only
+        # def clozeStr(self):
+        #     pass
+        #
+        # @clozeStr.setter
+        # def clozeStr(self, clozeStr):
+        #     pass
 
-def getQType(clozeStr):
-    '''returns Moodle Cloze question type code as a string'''
-    pattern = re.compile(r':\w+:')
-    list_matches = pattern.findall(clozeStr)
-    return list_matches[0].replace(':','')#TODO: see if there is a cleanear way to return what is between the :'s only
+    def getQuestions(self, clozeStr):
+        '''returns list of all cloze formatted questions in a string'''
+        pattern = re.compile(r'{.+}')
+        matches = pattern.findall(clozeStr)
+        return matches
 
-def getQResponses(clozeStr):
-    '''returns list of graded response values in this format ('points', 'answer' , 'acceptable range', 'feedback') '''
-    pattern = re.compile(r':\w+:.+}')
-    matches = pattern.findall(clozeStr)
-    for i, match in enumerate(matches):
-        s = re.search(r':' + getQType(match) + ':', match)
-        e = re.search(r'}', match)
-        responseStr = match[s.end():e.end()-1]
-    return getResponse(responseStr)
+    def getQPoints(self, clozeStr):
+        '''Returns defailt poinst for the question. '' will defualt to 1 point.'''
+        pattern = re.compile(r'{\d*')
+        matches = pattern.findall(clozeStr)
+        return matches[0].replace('{','')#TODO: see if there is a cleanear way to return what is between the digits only
 
-def getResponse(responseStr):
-    ''' Takes a string of possible responses stripped from Moodle Cloze formatted string and seperates: answer points, answer, acceptable error value in a NUMERICAL or NM type, and feedback'''
-    final = []
-    responses = responseStr.split('~')
-    for response in responses:
-        temp = []
-        if response[0] == '=':
-            temp.append('100')
-            nut = response[1:]
-        elif response[0] == '%':
-            findPnts = response.split('%')
-            temp.append(findPnts[1])
-            nut = findPnts[2]
-        else:
-            temp.append('0')
-            nut = response
-        if '#' in nut:
-            cracked = nut.split('#')
-            temp.append(cracked[0])
-            temp.append(cracked[1])
-        else:
-            temp.append(nut)
-            temp.append('')
-        final.append(temp)
-    return final
+    def getQType(self, clozeStr):
+        '''returns Moodle Cloze question type code as a string'''
+        pattern = re.compile(r':\w+:')
+        list_matches = pattern.findall(clozeStr)
+        return list_matches[0].replace(':','')#TODO: see if there is a cleanear way to return what is between the :'s only
 
-def wrapQuestion():
-    '''returns Moodle Cloze formatted string'''
-    pass
+    def getQResponses(self, clozeStr):
+        '''returns list of graded response values in this format ('points', 'answer' , 'acceptable range', 'feedback') '''
+        pattern = re.compile(r':\w+:.+}')
+        matches = pattern.findall(clozeStr)
+        for i, match in enumerate(matches):
+            s = re.search(r':' + getQType(match) + ':', match)
+            e = re.search(r'}', match)
+            responseStr = match[s.end():e.end()-1]
+        return getResponse(responseStr)#TODO: return respons string
 
-def showQuestion(question):
-    '''prints a deconstructed view of a Moodle Cloze Question'''
-    print('')
-    print(question)
-    print('')
-    print('-- Question Points:      ' + getQPoints(question))
-    print('   Question Type:        ' + getQType(question))
-    print('   Question Responses:')
-    for q in getQResponses(question):
-        print('    -- Points:           ' + q[0])
-        print('       Response:         ' + q[1])
-        print('       Feedback:         ' + q[2])
+    def getQResponseStr(self, clozeStr):
+        '''returns raw response string'''
+        pattern = re.compile(r':\w+:.+}')
+        matches = pattern.findall(clozeStr)
+        for i, match in enumerate(matches):
+            s = re.search(r':' + getQType(match) + ':', match)
+            e = re.search(r'}', match)
+            responseStr = match[s.end():e.end()-1]
+        return responseStr
 
-def testSample():
-    '''Returns a string of various Moodle Cloze formatted questions'''
-    sample = '''{105:MULTICHOICE:%100%Answer 1#Feedback 1~%50%Answer 2#Feedback 2~%0%Answer 3#Feedback 3}
-    {1:SHORTANSWER:%100%blank#Feedback 1~%100%space#Feedback 2}
-    {1:NUMERICAL:=0.6667:0.0001#Feedback for correct answer + or - .0001 ~%50%0.6667:.01#Feedback for half credit near correct answer in this case too much rounding error}' +
-    {1:NM:=4:1}
-    {1:MULTICHOICE:=Answer 1#Feedback 1~Answer 2#Feedback 2~Answer 3#Feedback 3}
-    {1:MULTICHOICE:Answer 1#Feedback 1~=Answer 2#Feedback 2~Answer 3#Feedback 3}
-    {:MRS:Answer 1#Feedback 1~=Answer 2#Feedback 2~Answer 3#Feedback 3}
-    {:MRS:%50%Answer 1#Feedback 1~%50%Answer 2#Feedback 2~%-50%Answer 3#Feedback 3~%-50%Answer 4#Feedback 4}'''
-    return sample
+    def getResponse(self, responseStr):#TODO: take getResponseStr() as an arg
+        ''' Takes a string of possible responses stripped from Moodle Cloze formatted string and seperates: answer points, answer, acceptable error value in a NUMERICAL or NM type, and feedback'''
+        final = []
+        responses = responseStr.split('~')
+        for response in responses:
+            temp = []
+            if response[0] == '=':
+                temp.append('100')
+                nut = response[1:]
+            elif response[0] == '%':
+                findPnts = response.split('%')
+                temp.append(findPnts[1])
+                nut = findPnts[2]
+            else:
+                temp.append('0')
+                nut = response
+            if '#' in nut:
+                cracked = nut.split('#')
+                temp.append(cracked[0])
+                temp.append(cracked[1])
+            else:
+                temp.append(nut)
+                temp.append('')
+            final.append(temp)
+        return final
 
-if __name__ == '__main__' :
-    pass
+    def makeClozeStr(self):
+        '''returns Moodle Cloze formatted string'''
+        responseStr =''
+        for r in self.questionResponses:
+            responseStr += '%{}%{}#{}'.format(str(r[0]),r[1],r[2])
+        return '{' + str(self.questionPoints) +':' + self.questionType + ':' + responseStr + '}'
+
+    def showQuestion(self, question):
+        '''prints a deconstructed view of a Moodle Cloze Question'''
+        print('')
+        print(question)
+        print('')
+        print('-- Question Points:      ' + getQPoints(question))
+        print('   Question Type:        ' + getQType(question))
+        print('   Question Responses:')
+        for q in getQResponses(question):
+            print('    -- Points:           ' + q[0])
+            print('       Response:         ' + q[1])
+            print('       Feedback:         ' + q[2])
+
+    def testSample(self):
+        '''Returns a string of various Moodle Cloze formatted questions'''
+        sample = '''{105:MULTICHOICE:%100%Answer 1#Feedback 1~%50%Answer 2#Feedback 2~%0%Answer 3#Feedback 3}
+        {1:SHORTANSWER:%100%blank#Feedback 1~%100%space#Feedback 2}
+        {1:NUMERICAL:=0.6667:0.0001#Feedback for correct answer + or - .0001 ~%50%0.6667:.01#Feedback for half credit near correct answer in this case too much rounding error}' +
+        {1:NM:=4:1}
+        {1:MULTICHOICE:=Answer 1#Feedback 1~Answer 2#Feedback 2~Answer 3#Feedback 3}
+        {1:MULTICHOICE:Answer 1#Feedback 1~=Answer 2#Feedback 2~Answer 3#Feedback 3}
+        {:MRS:Answer 1#Feedback 1~=Answer 2#Feedback 2~Answer 3#Feedback 3}
+        {:MRS:%50%Answer 1#Feedback 1~%50%Answer 2#Feedback 2~%-50%Answer 3#Feedback 3~%-50%Answer 4#Feedback 4}'''
+        return sample
+
+    def __repr__(self):
+        return "CloseQ('{}', '{}', '{}')".format(self.questionPoints, self.questionType ,self.questionResponses)
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.questionPoints, self.questionType ,self.questionResponses)
+    # if __name__ == '__main__' :
+    #     pass
 
 '''TESTING BELOW HERE'''
+junk = '{:MRS:%50%Answer 1#Feedback 1~%50%Answer 2#Feedback 2~%-50%Answer 3#Feedback 3~%-50%Answer 4#Feedback 4}'
+#test = ClozeQ.from_clozeStr(junk)
+points = 1
+type = 'MC'
+responses = ((100,'right', 'good job'),(0,'wrong', 'sorry'),(0,'no way', 'really?'))
+test2 = ClozeQ(points, type, responses)
+#print(test2.questionPoints, test2.questionType ,test2.responses)
+print(test2.__repr__)
+print(test2.__str__)
+print(test2.questionPoints, test2.questionType, test2.questionResponses)
+print(test2.makeClozeStr())
+# test.clozeStr.showQuestio()
 
-test = ClozeQ(1,'NM', 1,('%100%',4) )
-
-clozeQuestions = getQuestions(testSample())
-for q in clozeQuestions:
-    showQuestion(q)
+# clozeQuestions = getQuestions(testSample())
+# for q in clozeQuestions:
+#     showQuestion(q)
