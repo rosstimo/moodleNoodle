@@ -77,51 +77,80 @@ class ClozeQ:
     Idaho State University
     Robotics'''
 
-    def __init__(self, clozeStr):#TODO add verification that cloze question is properly formed. maybe raise exception or something
+    def __init__(self, cloze_Str):#TODO add verification that cloze question is properly formed. maybe raise exception or something
         '''Single Moodle Cloze Question.
         Properties Cloze formatted string, Question Points, Question Type,
         list of responses. If the question type is NUMERICAL or NM the answer
         field may contain the accepted error value seperated from the answer
         with a ':' in this format <answer:acceptedError> '''
 
-        self.clozeStr = clozeStr
-        self.qPoints = self.getQPoints()
-        self.type = self.getQType()
-        self.responses = self.getQResponses()
+        self._clozeStr = cloze_Str
+        self._qPoints = self.getQPoints()
+        self._type = self.getQType()
+        self._responses = self.getQResponses()
 
-    # @property
-    # def clozeStr(self):
-    #     return self.clozeStr
-    #
-    # @clozeStr.setter
-    # def clozeStr(self, cloze_String):
-    #     '''set/update clozeStr property attribute.'''
-    #     self.clozeStr = cloze_String
+    @property
+    def qPoints(self):
+        return self._qPoints
+    @qPoints.setter
+    def qpoints(self, updateStr):
+        self._qPoints = updateStr
+        self.clozeStr = self.makeClozeStr()
+
+    @property
+    def type(self):
+        return self._type
+    @type.setter
+    def type(self, updateStr):
+        self._type = updateStr
+        self.clozeStr = self.makeClozeStr()
+
+    @property
+    def responses(self):
+        return self._responses
+    @responses.setter
+    def responses(self, updateStr):
+        self._responses = updateStr
+        self.clozeStr = self.makeClozeStr()
+
+    @property
+    def clozeStr(self):
+        return self._clozeStr
+    @clozeStr.setter
+    def clozeStr(self, cloze_Str):
+        self._clozeStr = cloze_Str
+        self._qPoints = self.getQPoints()
+        self._type = self.getQType()
+        self._responses = self.getQResponses()
+
+    # @classmethod
+    # def from_values(cls, qPoints, type, responses):
+    #     '''Create instance from values'''
+    #     cls._qPoints = qPoints
+    #     cls._type = type
+    #     cls._responses = responses
+    #     return cls.makeClozeStr(cls)
 
 
-    # @property
     def makeClozeStr(self):
         '''property attribute: returns Moodle Cloze formatted string'''
         responseStr =''
         for r in self.responses:
             responseStr += '~%{}%{}#{}'.format(str(r[0]),r[1],r[2])
-        return '{' + str(self.points) +':' + self.type + ':' + responseStr + '}'
+        return '{' + str(self.qPoints) +':' + self.type + ':' + responseStr + '}'
 
-    #@property
     def getQPoints(self):
         '''Returns default points for the question. '' will defualt to 1 point.'''#TODO Should empty points string be set to 1? Moodle won't care.
         pattern = re.compile(r'{(\d*):')
         matches = pattern.findall(self.clozeStr)
         return matches[0]
 
-    #@property
     def getQType(self):
         '''returns Moodle Cloze question type code as a string'''
         pattern = re.compile(self.getQPoints() + r':(\w+):')
         matches = pattern.findall(self.clozeStr)
         return matches[0]
 
-    #@property
     def getQResponses(self):
         '''returns list of graded response values in this format ('points', 'answer' , 'acceptable range', 'feedback') '''#TODO still haven,t handeled acceptabe range for NM questions
         return self.getResponse(self.getQResponseStr())
@@ -200,9 +229,9 @@ junk2 = '{105:MULTICHOICE:%100%Answer 1#Feedback 1~%50%Answer 2#Feedback 2~%0%An
 points = 1
 type = 'MC'
 responses = ((100,'right', 'good job'),(0,'wrong', 'sorry'),(0,'no way', 'really?'))
-# test = ClozeQ(points, type, responses)
+test = ClozeQ.from_values(points, type, responses)
 print('**********************************')
-test = ClozeQ(junk2)
+#test = ClozeQ(junk2)
 print(test.clozeStr)
 print(test.qPoints, test.type, test.responses)
 print(test.qPoints)
@@ -215,25 +244,7 @@ print(test.qPoints, test.type, test.responses)
 print(test.qPoints)
 print(test.responses)
 test.showQuestion()
-
-# points = 1
-# type = 'MC'
-# responses = ((100,'right', 'good job'),(0,'wrong', 'sorry'),(0,'no way', 'really?'))
-# test2 = ClozeQ(points, type, responses)
-# print(test2.__repr__)
-# print(test2.__str__)
-# print(test2.questionPoints, test2.questionType, test2.questionResponses)
-# print(test2.makeClozeStr())
-# print(test2.getQPoints())
-# print(test2.getQType())
-# print(test2.getQResponseStr())
-#
-# #test2.clozeStr.showQuestion()
-# pattern = re.compile(r'[~](.+)[~}]')
-# #pattern = re.compile(test2.getQPoints() + r':(\w+):')
-# matches = pattern.findall(test2.getQResponseStr())
-# print(matches)
-
-# clozeQuestions = getQuestions(testSample())
-# for q in clozeQuestions:
-#     showQuestion(q)
+print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+test.type = 'NM'
+print(test.clozeStr)
+print(test.type)
